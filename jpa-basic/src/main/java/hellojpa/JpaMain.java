@@ -1,5 +1,8 @@
 package hellojpa;
 
+import hellojpa.domain.Member;
+import hellojpa.domain.Team;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -16,17 +19,16 @@ public class JpaMain {
         tx.begin();
 
         try {
-//            Member findMember = em.find(Member.class, 1L);
-//            findMember.setName("HelloAA");
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
 
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    .setFirstResult(5)
-                    .setMaxResults(8)
-                    .getResultList();
+            Member member = new Member();
+            member.setName("member1");
+            member.setTeam(team);
 
-            for (Member member : result) {
-                System.out.println("member.name = " + member.getUsername());
-            }
+            //역방향(주인이 아닌 방향)만 연관관계 설정 team.getMembers().add(member);
+            em.persist(member);
 
             tx.commit();
         } catch (Exception e) {
